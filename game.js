@@ -119,12 +119,6 @@ const textNodes = [
     {
         id: 10,
         text: 'You attack the hord, but there are too many and they overwhelm you. You are dead.',
-        options:[
-            {
-                text: 'restart',
-                nextText: -1
-            }
-        ]
     },
     {
         id: 8,
@@ -148,12 +142,6 @@ const textNodes = [
     {
         id: 12,
         text: 'The creatures are too fast and you can\'t fight them off. You are dead.',
-        options:[
-            {
-                text: 'restart',
-                nextText: -1
-            }
-        ]
     },
     {
         id: 13,
@@ -295,12 +283,6 @@ const textNodes = [
     {
         id: 22,
         text: 'You got lost in the caves and can\'t find your way out.',
-        options: [
-            {
-                text: 'Restart',
-                nextText: -1
-            }
-        ]
     },
     {
         id: 23,
@@ -405,42 +387,18 @@ const textNodes = [
     {
         id: 33,
         text: 'Despite your circumstances, you are able to thrive on the new planet.',
-        options: [
-            {
-                text: 'Restart',
-                nextText: -1
-            }
-        ]
     },
     {
         id: 34,
         text: 'Without any help coming and without proper supplies, you don\'t survive on the strange planet.',
-        options: [
-            {
-                text: 'Restart',
-                nextText: -1
-            }
-        ]
     },
     {
         id: 31,
         text: 'You join the pirates and spend years pillaging and storming other ships and space stations.',
-        options: [
-            {
-                text: 'Restart',
-                nextText: -1
-            }
-        ]
     },
     {
         id: 32,
         text: 'Your morals stop you from joining them and you become the pirate\'s captive, that is, until they abandon you on a desert planet.',
-        options: [
-            {
-                text: 'Restart',
-                nextText: -1
-            }
-        ]
     },
     {
         id: 29,
@@ -461,13 +419,6 @@ const textNodes = [
     {
         id: 30,
         text: 'You contact the nearest space station. They send help and you are rescued from the planet.',
-        options:[
-            {
-                text: 'Restart',
-                nextText: -1
-            }
-        ]
-
     },
     //Kinda like the main choices
     {

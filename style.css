@@ -23,6 +23,15 @@ body {
     box-shadow: 0 0 10px 2px;
 }
 
+.login-container {
+    width: 400px;
+    max-width: 80%;
+    background-color: rgb(182, 186, 189);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 2px;
+}
+
 .btn-grid {
     display: grid;
     grid-template-columns: repeat(2, auto);
@@ -40,4 +49,32 @@ body {
 
 .btn:hover {
     border-color: black;
+}
+
+.login-form {
+    align-self: flex-start;
+    display: grid;
+    padding: 10px 5px 5px;
+    justify-items: left;
+    align-items: left;
+}
+
+.submit-btn {
+    background-color: hsl(196, 51%, 57%);
+    border: 2px solid hsl(196, 100%, 30%);
+    padding: 0px 15px 0px 15px;
+    color:black;
+    outline: none;
+}
+
+.menu-container {
+    width: 200px;
+    max-width: 80%;
+    background-color: rgb(182, 186, 189);
+    text-align: center;
+    padding: 30px;
+    gap: 20px;
+    display: grid;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 2px;
 }
