@@ -69,26 +69,27 @@ app.post('/auth', function(req, res){
         console.log('error' + error.message);
         res.send('Something went wrong');
       }else if(results.length > 0){
+        //Get users password from database
         connection.query('SELECT password FROM users WHERE username = ?', [username], function(error, results, feilds){
           bcrypt.compare(password, results[0]['password'], function(error, results){
             if(error){
               console.log(error.message);
               res.send('Something went wrong');
             }
-            else if(results){
+            else if(results){//Password was correct
               req.session.username = username;
               res.redirect('/2FA');
             }
-            else{
+            else{//incorrect password
               res.send('Incorrect Password');
             }
           });
         });
-      }else{
+      }else{//Username not in database
         res.send('Incorrect username');
       }    
     });
-  }else{
+  }else{//Somehow the username or password were missing
     res.send('Input username and password');
   }
 });
@@ -101,11 +102,12 @@ app.post('/reg', function(req, res){
   email = req.body.email;
   confirm_email = req.body.confirm_email;
   if(username && password && email && confirm_email && confirm_password){
+    //check if username is taken
     connection.query('SELECT * FROM users WHERE username = ?', [username], function(error, results, fields){
       if(error){
         console.log('error' + error.message);
         res.send('Something went wrong');
-      } else if(results.length > 0){
+      } else if(results.length > 0){//username is taken
         res.send('username is taken');
       } else{
         if (email != confirm_email){
@@ -114,7 +116,7 @@ app.post('/reg', function(req, res){
           res.send('passwords must match');
         } else if((password.length < 8) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !specialChars.test(password)){
           res.send('Password must contain an uppercase letter, a number, a special character, and must be longer than 8 characters');
-        } else{
+        } else{//hash password
           bcrypt.genSalt(saltRounds, function(err, salt) {
             if(err){
               res.send('something went wrong');
@@ -123,13 +125,14 @@ app.post('/reg', function(req, res){
               if (err){
                 res.send('something went wrong');
               }
+              //save user
               connection.query('INSERT INTO users (username, password, email) VALUES(?, ?, ?)',[username, hash, email], function(error, results, fields){
                 if(error){
                   res.send('Something went wrong');
                 }else{
                   req.session.loggedin = true;
                   req.session.username = username;
-                  res.redirect('/menu');
+                  res.redirect('/menu');//automatically logs in new user
                 }
               });
             });
@@ -146,18 +149,20 @@ app.use('/send-otp', function(req, res, next){
   if(req.session.username == null){
     res.redirect('/login');
   }
+  //get email
   connection.query('SELECT email FROM users WHERE username = ?', [req.session.username], function(error, results, fields){
     if(error){
       console.log('error' + error.message);
       res.send('Something went wrong');
     } else if (results != null){
-      req.session.otp = otpGenerator.generate(OTP_LENGTH, {upperCaseAlphabets: false, specialChars:false});
+      req.session.otp = otpGenerator.generate(OTP_LENGTH, {upperCaseAlphabets: false, specialChars:false});//one time code
       mailOptions = {
         from: 'anya.r.castillo@gmail.com', // Sender address
         to: results[0]['email'], // List of recipients
         subject: 'Requested One Time Code', // Subject line
-        text: 'Here is the one time code you requested: ' + req.session.otp, // Plain text body
+        text: 'Here is the one time code you requested: ' + req.session.otp, // message
       };
+      //send email
       new Promise(function(resolve, reject){
         transport.sendMail(mailOptions, function(error, info){
           if(error){
@@ -195,7 +200,7 @@ app.post('/verify', function(req, res){
 
 //Change Password
 app.post('/password-change', function(req, res){
-  if(req.session.username == null){
+  if(req.session.username == null  || !req.session.loggedin){
     res.redirect('/login');
   }
   cur_pass = req.body.cur_pass;
@@ -204,7 +209,7 @@ app.post('/password-change', function(req, res){
   if(pass != confirm_pass){
     res.send('Passwords must match');
   }
-  else{
+  else{//compare current password
     connection.query('SELECT password FROM users WHERE username = ?', [req.session.username], function(error, results, fields){
       if(error){
         console.log('Error' + error.message);
@@ -215,11 +220,11 @@ app.post('/password-change', function(req, res){
             console.log(error.message);
             res.send('Something went wrong');
           }
-          else if(results){
+          else if(results){//Passwords match, check if new password is strong enough
             if((pass.length < 8) || !/[A-Z]/.test(pass) || !/[0-9]/.test(pass) || !specialChars.test(pass)){
               res.send('Password must contain an uppercase letter, a number, a special character, and must be longer than 8 characters'); //Placeholder
-            }else{
-              bcrypt.genSalt(saltRounds, function(err, salt) {
+            }else{//password is fine, update password
+              bcrypt.genSalt(saltRounds, function(err, salt) {//hash
                 if(err){
                   res.send('something went wrong');
                 }
@@ -256,7 +261,7 @@ app.post('/ending', function(req, res){
       connection.query('SELECT * FROM endings WHERE user = ?', [req.session.username], function(error, results, fields){
         if(error){
           res.send("Couldn't add ending");
-        } else if(results.length > 0){
+        } else if(results.length > 0){//Update endings user got
           if(bodyData.num == '10'){
             connection.query('UPDATE endings SET one = ? WHERE user = ?',
             [bodyData.name, req.session.username], function(error, results, fields){
@@ -319,7 +324,7 @@ app.post('/ending', function(req, res){
           }else{
             console.log('Could not save ending');
           }
-        } else{//User has no endings saved
+        } else{//User has no endings saved, add new ending
           if(bodyData.num == '10'){
             connection.query('INSERT INTO endings (user,one,two,three,four,five,six,seven,eight) VALUES(?,?,?,?,?,?,?,?,?)',
             [req.session.username, bodyData.name, null, null, null, null, null, null, null], function(error, results, fields){
@@ -450,7 +455,7 @@ app.get('/view', function(req, res){
     res.sendFile(path.join(__dirname+'/login.html'));
   }
 });
-app.get('/getEnd', function(req, res){
+app.get('/getEnd', function(req, res){//gets endings from database
   if(req.session.loggedin){
     connection.query('SELECT * FROM endings WHERE user = ?', [req.session.username], function(error, results, fields){
       if(error){
