@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>SOS Planet</title>
+</head>
+<html>
+   <body>
+    <script type="text/javascript">
+        fetch('/getEnd', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'GET',
+        }).then(res => res.json()
+        ).then(json => {
+        first = true;
+        for (i in json){
+            if(first){
+                delete json[i];
+                first = false;
+            }
+            else if(json[i] == null){
+                delete json[i]
+            }
+        }
+        for (let keys in json) {
+            const div = document.getElementById('ends');
+            div.innerText += json[keys];
+            div.innerText += "\n";
+        }
+        });
+    </script>
+    <div class="end-container">
+        <div class="col-md-12">
+            <h2>Endings Collected</h2>
+            <div id="ends">
+            </div>
+            <a href="logout">Logout</a>
+            <a href="menu">Menu</a>
+        </div>
+    </div>
+        <link href="style.css" rel="stylesheet">
+   </body>
+</html>

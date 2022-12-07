@@ -3,6 +3,9 @@ const optionBtnElement = document.getElementById('option-buttons')
 
 let state = {}
 
+const endings = {10 : 'Death by Alien Hoard',12 : 'Died to Rodent-Like Creatures',22 : 'Lost in the Caves',
+        33 : 'Thrive on the Planet',34 : 'Not Properly Supplied',31 : 'Join the Pirates',32 : 'Left on a Desert Planet',30 : 'Rescued'};
+
 function start(){
     state = {}
     showTextNode(1)
@@ -13,6 +16,21 @@ function showTextNode(textNodeIndex){
     textElement.innerText = textNode.text
     while(optionBtnElement.firstChild){
         optionBtnElement.removeChild(optionBtnElement.firstChild)
+    }
+    if(textNodeIndex in endings){
+        var textNodeIndexStr = String(textNodeIndex);
+        var end = endings[textNodeIndex];
+        fetch('/ending', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    num: textNodeIndexStr,
+                    name: end
+                  })
+              }).then(res => res.json())
+                .then(res => console.log(res));
     }
     textNode.options.forEach(option => {
         if(showOption(option)){

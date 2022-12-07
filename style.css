@@ -78,3 +78,34 @@ body {
     border-radius: 5px;
     box-shadow: 0 0 10px 2px;
 }
+
+.two-fa-container {
+    width: 300px;
+    max-width: 80%;
+    background-color: rgb(182, 186, 189);
+    padding: 0px 0px 15px 25px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 2px;
+}
+
+.two-fa-form{
+    align-items: center;
+    justify-items: left;
+    display: grid;
+    padding: 3px;
+    max-width: 80%;
+}
+
+.two-fa-control{
+    width: 80%px;
+    height: 30px;
+}
+
+.end-container{
+    width: 300px;
+    max-width: 90%;
+    background-color: rgb(182, 186, 189);
+    padding: 20px 10px 25px 25px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 2px;
+}
